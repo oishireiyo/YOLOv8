@@ -22,7 +22,8 @@ import cv2
 from Yolohelper import number_to_name
 
 class ObjectDetection(object):
-    def __init__(self, input_video: str, output_video: str, video_gen: bool = True) -> None:
+    def __init__(self, input_video: str, output_video: str, video_gen: bool = True,
+                 yolo_architecture: str = 'yolov8n') -> None:
         # Input video attributes
         self.input_video_name = input_video
         self.input_video = cv2.VideoCapture(input_video)
@@ -41,8 +42,8 @@ class ObjectDetection(object):
             self.output_video = cv2.VideoWriter(output_video, fourcc, self.fps, self.size)
 
         # YOLOv8
-        self.yolo_architecture = 'yolov8n'
-        self.yolo_model = YOLO('%s.pt' % (self.yolo_architecture))
+        self.yolo_architecture = yolo_architecture
+        self.yolo_model = YOLO('%s.pt' % (yolo_architecture))
 
         # Print
         self._print()
@@ -98,10 +99,12 @@ class ObjectDetection(object):
 if __name__ == '__main__':
     start_time = time.time()
 
+    yolo_architecture = 'yolov8m' # yolov8n, yolov8s, yolov8m, yolov8l, yolov8x
     input_video = '../Inputs/Solokatsu.mp4'
-    output_video = '../Outputs/Solokatsu_ObjectDetector.mp4'
+    output_video = '../Outputs/Solokatsu_%s_ObjectDetector.mp4' % (yolo_architecture)
 
-    Detector = ObjectDetection(input_video=input_video, output_video=output_video, video_gen=True)
+    Detector = ObjectDetection(input_video=input_video, output_video=output_video, video_gen=True,
+                               yolo_architecture=yolo_architecture)
     Detector.detect_all_frames()
     Detector.release_all()
 
